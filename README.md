@@ -6,10 +6,10 @@
 
 1. Copy the `TelekinesisController/` folder into BeamNG's `mods/unpacked/` directory.
 2. Start BeamNG, load any vehicle.
-3. Open **BKS Controller** from the UI editor (`ESC` → Customize UI → Gameplay).
+3. Open **UI apps** and then search for **telekinesis**. Add that to the layout of beamng. 
 4. The default animation lifts the car, arcs it sideways, and releases it mid-flight at t=11 s.
 5. Click **Play** to run the animation, **Stop** to release the car immediately.
-6. Press **Y** to hide/show the entire UI panel.
+6. ~~Press **Y** to hide/show the entire UI panel.~~ #NOTE: this function is not working right now. **TODO**
 
 ## Animation sources
 
