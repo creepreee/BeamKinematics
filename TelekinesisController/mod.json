@@ -1,0 +1,8 @@
+{
+  "name": "BeamNG Softbody Kinematics Controller",
+  "description": "Drive a vehicle through a timed sequence of positions and rotations using a PD controller with feed-forward — keyframe animation with easing, Blender export support, momentum-preserving release.",
+  "author": "creepreee",
+  "version": "1.0.0",
+  "category": "Gameplay",
+  "dependencies": ["thrusters"]
+}

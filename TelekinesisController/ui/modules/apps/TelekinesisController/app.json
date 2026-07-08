@@ -1,0 +1,22 @@
+{
+  "domElement": "<telekinesis-controller></telekinesis-controller>",
+  "name": "BeamNG Softbody Kinematics Controller",
+  "types": [
+    "ui.apps.categories.vehicle_control"
+  ],
+  "css": {
+    "left": "120px",
+    "top": "120px",
+    "width": "760px",
+    "height": "560px",
+    "min-width": "620px",
+    "min-height": "420px"
+  },
+  "description": "Keyframe-driven vehicle pose controller with PD feed-forward, easing, and Blender export",
+  "author": "ubaid_i2c + Codex",
+  "version": "1.0.0",
+  "directive": "telekinesisController",
+  "category": "Gameplay",
+  "isAuxiliary": false,
+  "interactive": "required"
+}

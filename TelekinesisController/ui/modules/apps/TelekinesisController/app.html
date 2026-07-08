@@ -1,0 +1,548 @@
+<style>
+  .telekinesis-app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+    color: #edf2f4;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 13px;
+  }
+
+  .telekinesis-app * {
+    box-sizing: border-box;
+  }
+
+  .telekinesis-shell {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .telekinesis-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border-bottom: 1px solid rgba(190, 205, 214, 0.22);
+    background: rgba(15, 20, 24, 0.48);
+    backdrop-filter: blur(4px);
+  }
+
+  .telekinesis-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-right: auto;
+    white-space: nowrap;
+  }
+
+  .telekinesis-status {
+    color: #9fb0ba;
+    font-size: 12px;
+    min-width: 140px;
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .telekinesis-body {
+    min-height: 0;
+    padding: 4px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+  }
+
+  .telekinesis-top-area {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    gap: 6px;
+  }
+
+  .telekinesis-panel {
+    border: 1px solid rgba(190, 205, 214, 0.22);
+    background: rgba(15, 20, 24, 0.42);
+    backdrop-filter: blur(4px);
+    border-radius: 6px;
+    min-width: 0;
+  }
+
+  .telekinesis-panel-header {
+    padding: 6px 10px;
+    border-bottom: 1px solid rgba(190, 205, 214, 0.18);
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  .telekinesis-panel-body {
+    padding: 8px;
+  }
+
+  .telekinesis-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .telekinesis-field {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr);
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .telekinesis-field-boolean {
+    grid-template-columns: 60px 20px;
+  }
+  .telekinesis-field-boolean input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: #5accb8;
+    cursor: pointer;
+  }
+
+  .telekinesis-field label {
+    color: #aebbc3;
+    white-space: nowrap;
+    font-size: 10px;
+  }
+
+  .telekinesis-field input,
+  .telekinesis-cell input {
+    width: 100%;
+    min-width: 0;
+    height: 20px;
+    border: 1px solid rgba(190, 205, 214, 0.28);
+    border-radius: 3px;
+    background: rgba(5, 8, 10, 0.58);
+    color: #edf2f4;
+    padding: 1px 4px;
+    font-size: 10px;
+  }
+
+  .telekinesis-release {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .telekinesis-release input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+
+  .telekinesis-keyframes {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 10px;
+  }
+
+  .telekinesis-keyframes th,
+  .telekinesis-keyframes td {
+    border-bottom: 1px solid rgba(190, 205, 214, 0.14);
+    padding: 1px 2px;
+    vertical-align: middle;
+  }
+
+  .telekinesis-keyframes th {
+    color: #aebbc3;
+    font-size: 9px;
+    font-weight: 700;
+    text-align: left;
+    padding: 2px;
+  }
+
+  .telekinesis-keyframes tr.active {
+    background: rgba(53, 87, 98, 0.48);
+  }
+
+  .telekinesis-cell.time { width: 42px; }
+  .telekinesis-cell.xyz { width: 48px; }
+  .telekinesis-cell.axis { width: 38px; }
+  .telekinesis-cell.deg { width: 44px; }
+  .telekinesis-cell.curve { width: 62px; }
+  .telekinesis-cell.actions { width: 22px; text-align: center; }
+
+  .telekinesis-bezier {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2px;
+    margin-top: 2px;
+  }
+  .telekinesis-bezier input {
+    height: 16px;
+    font-size: 8px;
+    padding: 1px 2px;
+  }
+
+  .telekinesis-button {
+    border: 1px solid rgba(190, 205, 214, 0.25);
+    border-radius: 5px;
+    background: rgba(37, 49, 58, 0.72);
+    color: #edf2f4;
+    height: 26px;
+    padding: 0 8px;
+    font-weight: 700;
+    font-size: 12px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .telekinesis-button:hover {
+    filter: brightness(1.12);
+  }
+
+  .telekinesis-button.primary {
+    background: rgba(45, 111, 98, 0.82);
+    border-color: #3d8f7f;
+  }
+
+  .telekinesis-button.warn {
+    background: rgba(122, 76, 34, 0.82);
+    border-color: #a4662c;
+  }
+
+  .telekinesis-button.danger {
+    background: rgba(123, 48, 48, 0.82);
+    border-color: #a94141;
+  }
+
+  .telekinesis-button.small {
+    width: 24px;
+    padding: 0;
+    font-size: 11px;
+  }
+
+  .telekinesis-collapse-button {
+    width: 24px;
+    padding: 0;
+    font-size: 13px;
+  }
+
+  .telekinesis-show-button {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    border: 1px solid #3d8f7f;
+    border-radius: 5px;
+    background: rgba(45, 111, 98, 0.9);
+    color: #edf2f4;
+    height: 26px;
+    padding: 0 10px;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 20;
+  }
+  .telekinesis-show-button:hover {
+    filter: brightness(1.12);
+  }
+
+  .telekinesis-graph-panel {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .telekinesis-graph-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+  }
+  .telekinesis-speed-graph {
+    display: block;
+    width: 100%;
+    flex: 1;
+    min-height: 80px;
+    border-radius: 4px;
+    border: 1px solid rgba(190, 205, 214, 0.18);
+    background: rgba(5, 8, 10, 0.42);
+    cursor: crosshair;
+  }
+  .telekinesis-graph-info {
+    font-size: 10px;
+    color: #cfe0e8;
+    font-weight: 600;
+    text-align: center;
+    padding: 3px 0 0;
+    user-select: none;
+  }
+  .telekinesis-current-time {
+    font-size: 11px;
+    color: #5accb8;
+    font-weight: 700;
+    text-align: center;
+    padding: 1px 0;
+    user-select: none;
+  }
+  .telekinesis-graph-hint {
+    font-size: 9px;
+    color: #7a8e98;
+    text-align: center;
+    padding: 1px 0 0;
+    user-select: none;
+  }
+
+  .telekinesis-zoom-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 0 0;
+  }
+  .telekinesis-zoom-row label {
+    color: #7a8e98;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .telekinesis-zoom-slider {
+    flex: 1;
+    height: 4px;
+    accent-color: #5accb8;
+    cursor: ew-resize;
+  }
+  .telekinesis-zoom-value {
+    color: #9fb0ba;
+    font-size: 10px;
+    min-width: 32px;
+    text-align: right;
+  }
+  .telekinesis-fit-button {
+    height: 20px;
+    padding: 0 8px;
+    font-size: 10px;
+  }
+
+  .telekinesis-side-col {
+    width: 145px;
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .telekinesis-side-wide {
+    width: 240px;
+    min-width: 200px;
+  }
+
+  .telekinesis-table-panel {
+    max-height: 130px;
+    display: flex;
+    flex-direction: column;
+  }
+  .telekinesis-table-panel .telekinesis-panel-body {
+    overflow: auto;
+    padding: 2px 4px;
+  }
+
+  .telekinesis-baked-label {
+    font-size: 10px;
+    color: #5accb8;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .telekinesis-baked-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px;
+    background: rgba(90, 204, 184, 0.08);
+    border: 1px solid rgba(90, 204, 184, 0.18);
+    border-radius: 4px;
+    font-size: 11px;
+    color: #b8cad4;
+    margin-bottom: 4px;
+  }
+
+  .telekinesis-file-input {
+    display: none;
+  }
+
+  .telekinesis-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-top: 1px solid rgba(190, 205, 214, 0.22);
+    background: rgba(15, 20, 24, 0.48);
+    backdrop-filter: blur(4px);
+  }
+
+  .telekinesis-path {
+    color: #9fb0ba;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-left: auto;
+    font-size: 11px;
+  }
+</style>
+
+<div class="bngApp telekinesis-app">
+  <div class="telekinesis-shell" ng-show="tk.uiVisible">
+    <div class="telekinesis-toolbar">
+      <div class="telekinesis-title">BKS Controller</div>
+      <button class="telekinesis-button primary" ng-click="tk.play()" title="Apply current keyframes and play the animation">Play</button>
+      <button class="telekinesis-button danger" ng-click="tk.stop()" title="Stop and hand the car back to physics">Stop</button>
+      <button class="telekinesis-button" ng-click="tk.apply()" title="Send the edited keyframes/settings to the engine (no play)">Apply</button>
+      <button class="telekinesis-button warn" ng-click="tk.reload()" title="Reload the mod's Lua code">Reload</button>
+      <button class="telekinesis-button" ng-click="tk.toggleUI()" title="Hide panel (Y)">Hide</button>
+      <div class="telekinesis-status">{{tk.status}}</div>
+    </div>
+
+    <div class="telekinesis-body">
+      <!-- TOP: Advanced left | Graph center | Release right -->
+      <div class="telekinesis-top-area">
+        <!-- LEFT COLUMN: Advanced panel (wider for 2-column grid) -->
+        <div class="telekinesis-side-col telekinesis-side-wide">
+          <div class="telekinesis-panel">
+            <div class="telekinesis-panel-header" layout="row" layout-align="start center">
+              <span>Advanced</span>
+              <button class="telekinesis-button telekinesis-collapse-button" ng-click="tk.showAdvanced = !tk.showAdvanced">{{tk.showAdvanced ? 'v' : '>'}}</button>
+            </div>
+            <div class="telekinesis-panel-body" ng-if="tk.showAdvanced">
+              <div class="telekinesis-grid">
+                <div class="telekinesis-field" ng-repeat="field in tk.settingFields track by field.key" ng-class="{'telekinesis-field-boolean': field.type === 'boolean'}">
+                  <label>{{field.label}}</label>
+                  <input ng-if="field.type !== 'boolean'" type="number" step="{{field.step}}" ng-model="tk.state.settings[field.key]" ng-change="tk.markDirty()">
+                  <input ng-if="field.type === 'boolean'" type="checkbox" ng-model="tk.state.settings[field.key]" ng-change="tk.markDirty()">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CENTER: Graph Editor -->
+        <div class="telekinesis-panel telekinesis-graph-panel">
+          <div class="telekinesis-panel-header" layout="row" layout-align="start center">
+            <span flex>Graph Editor</span>
+            <md-select flex="20" ng-model="tk.graphAxis" ng-change="tk.changeAxis()" aria-label="Graph axis">
+              <md-option ng-value="opt.value" ng-repeat="opt in tk.graphAxisOptions track by $index">{{opt.label}}</md-option>
+            </md-select>
+          </div>
+          <div class="telekinesis-panel-body telekinesis-graph-body">
+            <canvas class="telekinesis-speed-graph" ng-mousedown="tk.graphMouseDown($event)" ng-mousemove="tk.graphMouseMove($event)" ng-mouseup="tk.graphMouseUp($event)" ng-mouseleave="tk.graphMouseUp($event)"></canvas>
+            <div class="telekinesis-zoom-row">
+              <label>Zoom</label>
+              <input class="telekinesis-zoom-slider" type="range" min="0.5" max="8" step="0.1" ng-model="tk.graphZoom" ng-change="tk.changeZoom()" title="Zoom centers on the selected keyframe">
+              <span class="telekinesis-zoom-value">{{tk.graphZoom}}x</span>
+              <button class="telekinesis-button telekinesis-fit-button" ng-click="tk.fitZoom()" title="Fit whole timeline">Fit</button>
+            </div>
+            <div class="telekinesis-graph-info">{{tk.selectionInfo()}}</div>
+            <div class="telekinesis-current-time" ng-if="tk.currentTime > 0">⏱ {{tk.currentTime.toFixed(2)}}s</div>
+            <div class="telekinesis-graph-hint">Click a keyframe to select · zoom follows it · drag ● handles to shape easing</div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Release panel -->
+        <div class="telekinesis-side-col">
+          <div class="telekinesis-panel">
+            <div class="telekinesis-panel-header"><span>Release</span></div>
+            <div class="telekinesis-panel-body">
+              <label class="telekinesis-release">
+                <input type="checkbox" ng-model="tk.state.releaseEnabled" ng-change="tk.markDirty()">
+                <span>Release marker</span>
+              </label>
+              <div class="telekinesis-field">
+                <label>Time</label>
+                <input type="number" step="0.01" ng-disabled="!tk.state.releaseEnabled" ng-model="tk.state.releaseTime" ng-change="tk.markDirty()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM: Keyframe table -->
+      <div class="telekinesis-panel telekinesis-table-panel">
+        <div class="telekinesis-panel-header" layout="row" layout-align="start center">
+          <span flex>Keyframes</span>
+          <span ng-if="tk.isBaked && !tk.showAllFrames" class="telekinesis-baked-label">{{tk.bakedCount}} frames baked</span>
+          <button ng-if="!tk.isBaked || tk.showAllFrames" class="telekinesis-button" ng-click="tk.addKeyframe()">Add</button>
+          <button ng-if="!tk.isBaked || tk.showAllFrames" class="telekinesis-button" ng-click="tk.duplicateKeyframe()" ng-disabled="tk.selectedIndex < 0">Duplicate</button>
+        </div>
+        <div class="telekinesis-panel-body">
+          <!-- Baked summary banner (collapsed) -->
+          <div ng-if="tk.isBaked && !tk.showAllFrames" class="telekinesis-baked-banner">
+            <span>Baked — {{tk.bakedCount}} linear frames</span>
+            <button class="telekinesis-button telekinesis-fit-button" ng-click="tk.toggleShowFrames()">Show all</button>
+          </div>
+          <!-- Baked expanded banner -->
+          <div ng-if="tk.isBaked && tk.showAllFrames" class="telekinesis-baked-banner">
+            <span>Showing all {{tk.bakedCount}} frames</span>
+            <button class="telekinesis-button telekinesis-fit-button" ng-click="tk.toggleShowFrames()">Hide</button>
+          </div>
+          <table class="telekinesis-keyframes">
+            <thead>
+              <tr>
+                <th class="telekinesis-cell time">Time</th>
+                <th class="telekinesis-cell xyz">X</th>
+                <th class="telekinesis-cell xyz">Y</th>
+                <th class="telekinesis-cell xyz">Z</th>
+                <th class="telekinesis-cell axis">Axis</th>
+                <th class="telekinesis-cell deg">Deg</th>
+                <th class="telekinesis-cell curve">Curve</th>
+                <th class="telekinesis-cell actions"></th>
+              </tr>
+            </thead>
+            <tbody ng-if="!tk.isBaked || tk.showAllFrames">
+              <tr ng-repeat="kf in tk.state.keyframes track by $index" ng-class="{active: tk.selectedIndex === $index}" ng-click="tk.selectKeyframe($index)">
+                <td class="telekinesis-cell time"><input type="number" step="0.01" ng-model="kf.time" ng-change="tk.markDirty()"></td>
+                <td class="telekinesis-cell xyz"><input type="number" step="0.1" ng-model="kf.off.x" ng-change="tk.markDirty()"></td>
+                <td class="telekinesis-cell xyz"><input type="number" step="0.1" ng-model="kf.off.y" ng-change="tk.markDirty()"></td>
+                <td class="telekinesis-cell xyz"><input type="number" step="0.1" ng-model="kf.off.z" ng-change="tk.markDirty()"></td>
+                <td class="telekinesis-cell axis">
+                  <md-select ng-model="kf.rot.axis" ng-change="tk.markDirty()" aria-label="Rot axis">
+                    <md-option ng-repeat="opt in tk.axisOptions" value="{{opt.value}}">{{opt.label}}</md-option>
+                  </md-select>
+                </td>
+                <td class="telekinesis-cell deg"><input type="number" step="1" ng-model="kf.rot.deg" ng-change="tk.markDirty()"></td>
+                <td class="telekinesis-cell curve">
+                  <md-select ng-model="kf.curveMode" ng-change="tk.changeCurve(kf)" aria-label="Curve mode">
+                    <md-option ng-repeat="opt in tk.curveOptions" value="{{opt.value}}">{{opt.label}}</md-option>
+                  </md-select>
+                  <div class="telekinesis-bezier" ng-if="kf.curveMode === 'bezier'">
+                    <input type="number" step="0.01" min="0" max="1" ng-model="kf.bezier.p1.x" ng-change="tk.markDirty()" placeholder="p1x">
+                    <input type="number" step="0.01" ng-model="kf.bezier.p1.y" ng-change="tk.markDirty()" placeholder="p1y">
+                    <input type="number" step="0.01" min="0" max="1" ng-model="kf.bezier.p2.x" ng-change="tk.markDirty()" placeholder="p2x">
+                    <input type="number" step="0.01" ng-model="kf.bezier.p2.y" ng-change="tk.markDirty()" placeholder="p2y">
+                  </div>
+                </td>
+                <td class="telekinesis-cell actions">
+                  <button class="telekinesis-button small danger" ng-click="tk.deleteKeyframe($index)" ng-disabled="tk.state.keyframes.length <= 1">X</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="telekinesis-footer">
+      <button class="telekinesis-button" ng-click="tk.refresh()" title="Reload the current state from the engine">Refresh</button>
+      <button class="telekinesis-button primary" ng-click="tk.savePreset()" title="Save keyframes + settings to a JSON preset">Save</button>
+      <button class="telekinesis-button primary" ng-click="tk.loadAnimation()" title="Load the Blender-exported animation_data.lua and play it">Load Anim</button>
+      <button class="telekinesis-button" ng-click="tk.openJsonFile()" title="Import a saved JSON preset from disk">Import JSON</button>
+      <button class="telekinesis-button warn" ng-click="tk.resetDefaults()" title="Reset keyframes + settings to defaults">Defaults</button>
+      <input class="telekinesis-file-input" type="file" accept=".json,application/json">
+      <span class="telekinesis-path">{{tk.state.saveFile}}</span>
+    </div>
+  </div>
+
+  <!-- Guaranteed fallback: when the panel is hidden (via Y or Hide), this small button
+       stays visible so the user can always bring the panel back, even if the game
+       swallowed the Y key. Lives OUTSIDE the ng-show shell so it isn't hidden too. -->
+  <button class="telekinesis-show-button" ng-hide="tk.uiVisible" ng-click="tk.toggleUI()" title="Show panel (Y)">BKS ▸</button>
+</div>
