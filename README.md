@@ -1,4 +1,4 @@
-# BeamNG Softbody Kinematics Controller
+# BeamNG Softbody Kinematics Controller/ keyframe animations mod for BeamNG
 
 **BKS Controller** — a BeamNG.drive mod that drives a vehicle through a timed sequence of positions and rotations using the thrusters API. A PD controller with feed-forward follows a keyframe animation timeline, then hands the car back to physics with full momentum at a chosen moment.
 
