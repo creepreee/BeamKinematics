@@ -134,3 +134,5 @@ Open the **Advanced** panel (left column) to tune the controller.
 | `settings/telekinesis/controller.json` | Saved presets. |
 | `data/blender_export_animation.py` | Blender export script. |
 | `lua/ge/extensions/telekinesis/animation_data.lua` | Blender output (auto-generated). |
+
+Check the 2 videos in the repo for insights. you will now what this beamng plugin does.
